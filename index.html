@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Painel Administrativo • Calls</title>
+<link rel="stylesheet" href="styles.css" />
+
+
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <h1>Painel Administrativo</h1>
+      </div>
+      <nav class="nav">
+        <a href="#" data-view="home" class="active">Início</a>
+        <a href="#" data-view="vistorias">Vistorias</a>
+        <a href="#" data-view="tempo">Tempo Real</a>
+        <a href="#" data-view="oficiais">Oficiais</a>
+        <a href="#" data-view="ranking">Ranking</a>
+        <a href="#" data-view="guarnicao">Comandos</a>
+      </nav>
+    </header>
+
+    <main class="container views">
+      <!-- HOME -->
+      <section id="view-home" class="view">
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-label">Ativos agora</div><div id="kpi-active" class="kpi-value">0</div></div>
+          <div class="kpi"><div class="kpi-label">Top (7 dias)</div><div id="kpi-top" class="kpi-value">—</div></div>
+          <div class="kpi"><div class="kpi-label">Total (hoje)</div><div id="kpi-today" class="kpi-value">0h</div></div>
+        </div>
+
+        <div class="grid-2">
+          <section class="card chart">
+            <div class="card-head">
+              <h2>Atividade (7 dias)</h2>
+              <div class="muted">Tempo total por dia</div>
+            </div>
+            <canvas id="chart-line-7d" width="980" height="300"></canvas>
+            <div class="chart-legend" id="legend-line"></div>
+          </section>
+
+          <section class="card chart">
+            <div class="card-head">
+              <h2>Distribuição por Grupo (7 dias)</h2>
+              <div class="muted">Proporção do tempo</div>
+            </div>
+            <div class="donut-wrap">
+              <canvas id="chart-pie-groups" width="320" height="320"></canvas>
+              <div class="donut-legend" id="legend-pie"></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="grid-2">
+          <section class="card chart">
+            <div class="card-head">
+              <h2>Comparação por Guarnições (7 dias)</h2>
+              <div class="muted">Tempo por grupo ao longo dos dias</div>
+            </div>
+            <canvas id="chart-line-groups" width="980" height="300"></canvas>
+            <div class="chart-legend" id="legend-line-groups"></div>
+          </section>
+        </div>
+
+        <div class="grid-2">
+          <section class="card">
+            <h2>Resumo por Grupo (7 dias)</h2>
+            <div id="groups" class="groups"></div>
+          </section>
+
+          <section class="card">
+            <h2>Top Usuários (7 dias)</h2>
+            <ul id="top-users" class="list"></ul>
+          </section>
+        </div>
+      </section>
+
+      <!-- VISTORIAS -->
+      <section id="view-vistorias" class="view hidden">
+        <section class="card">
+          <h2>Vistorias • Histórico</h2>
+          <div class="row wrap">
+            <select id="vist-range">
+              <option value="24h">Últimas 24h</option>
+              <option value="7d" selected>Últimos 7 dias</option>
+              <option value="30d">Últimos 30 dias</option>
+              <option value="all">Tudo</option>
+            </select>
+            <select id="vist-group">
+              <option value="">Todos os grupos</option>
+              <option value="comandogeral">Comando Geral</option>
+              <option value="prf">PRF</option>
+              <option value="pmerj">PMERJ</option>
+              <option value="pcerj">PCERJ</option>
+            </select>
+            <input id="vist-user" type="text" placeholder="ID do usuário (opcional)" />
+            <input id="vist-from" type="datetime-local" />
+            <input id="vist-to" type="datetime-local" />
+            <button id="vist-apply">Aplicar</button>
+            <button id="vist-export">Exportar CSV</button>
+          </div>
+          <div id="vist-summary" class="muted"></div>
+          <table class="table">
+            <thead>
+              <tr><th>Início</th><th>Fim</th><th>Usuário</th><th>Grupo</th><th>Canal</th><th>Duração</th><th>Pontos</th></tr>
+            </thead>
+            <tbody id="vist-rows"></tbody>
+          </table>
+        </section>
+      </section>
+
+      <!-- TEMPO REAL -->
+      <section id="view-tempo" class="view hidden">
+        <section class="card">
+          <h2>Tempo Real • Em chamadas</h2>
+          <ul id="active" class="list"></ul>
+        </section>
+      </section>
+
+      <!-- OFICIAIS -->
+      <section id="view-oficiais" class="view hidden">
+        <section class="card">
+          <h2>Oficiais</h2>
+          <div class="row">
+            <input id="search" type="text" placeholder="Buscar oficial por nome..." />
+            <button id="btnSearch">Pesquisar</button>
+          </div>
+          <ul id="results" class="list"></ul>
+        </section>
+      </section>
+
+      <!-- RANKING -->
+      <section id="view-ranking" class="view hidden">
+        <section class="card">
+          <h2>Ranking Geral de Pontos (Oficiais)</h2>
+          <div class="row wrap">
+            <select id="rank-range">
+              <option value="7d" selected>7 dias</option>
+              <option value="30d">30 dias</option>
+              <option value="all">Tudo</option>
+            </select>
+            <input id="rank-from" type="datetime-local" />
+            <input id="rank-to" type="datetime-local" />
+            <button id="rank-refresh">Atualizar</button>
+          </div>
+          <div id="rank-top" class="rank-grid"></div>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Oficial</th><th>Pontos</th><th>Tempo</th></tr>
+            </thead>
+            <tbody id="rank-rows"></tbody>
+          </table>
+        </section>
+      </section>
+
+      <!-- COMANDOS -->
+      <section id="view-guarnicao" class="view hidden">
+        <section class="card">
+          <h2>Comandos</h2>
+          <div class="row wrap">
+            <div class="seg">Por Cargo</div>
+            <div id="chips-cargos" class="chips"></div>
+          </div>
+          <div class="row wrap">
+            <div class="seg">Guarnição</div>
+            <select id="g-select-cargo"></select>
+          </div>
+          <div class="row wrap">
+            <div class="seg">Por Call</div>
+            <div id="chips-calls" class="chips"></div>
+          </div>
+          <div class="row wrap">
+            <select id="g-range">
+              <option value="7d" selected>7 dias</option>
+              <option value="30d">30 dias</option>
+              <option value="all">Tudo</option>
+            </select>
+            <input id="g-from" type="datetime-local" />
+            <input id="g-to" type="datetime-local" />
+            <button id="g-refresh">Atualizar</button>
+          </div>
+          <div id="g-selected" class="muted"></div>
+          <h3>Oficiais</h3>
+          <ul id="g-oficiais" class="list"></ul>
+          <div id="g-top" class="rank-grid"></div>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Usuário</th><th>Pontos</th><th>Tempo</th></tr>
+            </thead>
+            <tbody id="g-rows"></tbody>
+          </table>
+          <h3>Detalhes</h3>
+          <table class="table">
+            <thead>
+              <tr><th>#</th><th>Oficial</th><th>Tempo</th><th>Pontos</th><th>Medalhas</th><th>Hoje</th><th>Status</th><th>Último</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="g-details"></tbody>
+          </table>
+        </section>
+      </section>
+    </main>
+
+<script src="./app.js"></script>
+  </body>
+  </html>
