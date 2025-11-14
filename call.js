@@ -849,7 +849,7 @@ module.exports = function setupCallTracking(app, client, { GUILD_ID, ROLE_IDS = 
       const allowed = new Set(Array.from(cargoIndex.entries()).filter(([,set]) => set.has(key)).map(([uid]) => uid));
       const acc = new Map(); // uid -> { id,name,totalSec,coins,medals,lastEndISO,activeNow,todayAccruedSec,todayEarned }
 
-      // Aggregate sessions time within window
+      // Aggregate sessions time within window.
       for (const s of state.sessions) {
         if (!allowed.has(s.userId)) continue;
         const end = Date.parse(s.endISO);

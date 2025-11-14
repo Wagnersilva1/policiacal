@@ -73,7 +73,7 @@ async function loadGroups() {
   } catch {}
 }
 
-// TEMPO REAL
+// TEMPO REAL.
 async function loadActive() {
   try {
     const data = await j('/api/calls/active');
