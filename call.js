@@ -224,6 +224,7 @@ module.exports = function setupCallTracking(app, client, { GUILD_ID, ROLE_IDS = 
     { key: 'pcerj', name: 'PCERJ', roleIds: ['909536846638379019'] },
     { key: 'pf',    name: 'PF',    roleIds: ['1137579919417811015'] },
     { key: 'prf',   name: 'PRF',   roleIds: ['1075206178394611822'] },
+    { key: 'coe',   name: 'COE',   roleIds: ['1001309492580982835'] },
     { key: 'eb',    name: 'EB',    roleIds: ['1361174102890643466'] }
   ];
 
