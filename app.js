@@ -200,6 +200,8 @@ document.querySelectorAll('.nav a').forEach(a => a.addEventListener('click', (e)
 
 document.getElementById('btnSearch').addEventListener('click', searchUsers);
 document.getElementById('search').addEventListener('keydown', (e)=>{ if (e.key==='Enter') searchUsers(); });
+document.getElementById('rank-search-btn').addEventListener('click', loadRanking);
+document.getElementById('rank-search').addEventListener('keydown', (e)=>{ if (e.key==='Enter') loadRanking(); });
 document.getElementById('vist-apply').addEventListener('click', renderVistorias);
 
 // initial
@@ -216,11 +218,21 @@ async function loadRanking() {
   const range = document.getElementById('rank-range').value;
   const from = document.getElementById('rank-from')?.value;
   const to = document.getElementById('rank-to')?.value;
+  const searchEl = document.getElementById('rank-search');
+  const q = (searchEl?.value || '').trim().toLowerCase();
   const qs = (p) => Object.entries(p).filter(([,v])=>v).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
   const stats = await j(`/api/calls/ranking-medals?range=${encodeURIComponent(range)}${qs({from,to})?`&${qs({from,to})}`:''}`);
   const oficiais = await j('/api/oficiais');
   const setOficiais = new Set((oficiais.oficiais || []).map(o => o.id));
-  const list = (stats.ranking || []).filter(r => setOficiais.has(r.id));
+  let list = (stats.ranking || []).filter(r => setOficiais.has(r.id));
+
+  if (q) {
+    list = list.filter(r => {
+      const name = (r.name || '').toLowerCase();
+      const idStr = String(r.id || '').toLowerCase();
+      return name.includes(q) || idStr.includes(q);
+    });
+  }
 
   const top = list.slice(0, 6);
   const grid = document.getElementById('rank-top');
